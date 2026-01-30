@@ -1,0 +1,70 @@
+{
+  "name": "@cf-plugins/cf-targets-plugin",
+  "version": "2.1.0",
+  "description": "Cloud Foundry CLI plugin for managing multiple API targets - USE AT YOUR OWN RISK",
+  "main": "index.js",
+  "bin": {
+    "cf-target-plugin": "./bin/cf-targets-plugin"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install.js",
+    "preuninstall": "node scripts/uninstall.js",
+    "test": "echo \"⚠️ WARNING: Limited testing performed. Use at your own risk.\" && exit 0"
+  },
+  "keywords": [
+    "cloudfoundry",
+    "cf",
+    "cli",
+    "plugin",
+    "targets",
+    "api",
+    "cloud",
+    "deployment"
+  ],
+  "author": "Amit-A2Z and Contributors",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Amit-A2Z/cf-targets-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Amit-A2Z/cf-targets-plugin/issues"
+  },
+  "homepage": "https://github.com/Amit-A2Z/cf-targets-plugin#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "files": [
+    "bin/",
+    "scripts/",
+    "index.js",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "DISCLAIMER.md",
+    "SECURITY.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "@cf-plugins:registry": "https://registry.npmjs.org"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/Amit-A2Z"
+  },
+  "preferGlobal": true,
+  "warnings": [
+    "⚠️ USE AT YOUR OWN RISK: This software is provided 'AS IS' without warranty",
+    "⚠️ SECURITY: No comprehensive security testing performed",
+    "⚠️ TESTING: Limited functional testing across platforms"
+  ]
+}

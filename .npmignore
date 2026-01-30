@@ -1,0 +1,73 @@
+# NPM Ignore File - Exclude unnecessary files from npm package
+
+# Development and build files
+.git/
+.github/
+.vscode/
+.kiro/
+.ssh-remote
+*.swp
+*~
+.DS_Store
+
+# Build artifacts and releases
+/releases/
+/cf-targets-plugin
+*.exe
+*.sha1
+
+# Go specific files
+go.mod
+go.sum
+*.go
+!scripts/*.js
+!index.js
+
+# Build scripts and development tools
+Makefile
+build-all.sh
+generate-repo-index
+
+# Test files
+*_test.go
+*_suite_test.go
+
+# Development documentation (keep essential docs)
+DEPENDENCY_ANALYSIS.md
+RELEASE_CHECKLIST.md
+.kiro/
+
+# Spec and design documents
+.kiro/specs/
+
+# Node.js (if any)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE files
+.idea/
+*.iml
+*.sublime-*
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Keep these essential files for npm package:
+# package.json (automatically included)
+# index.js (main entry point)
+# scripts/ (installation scripts)
+# bin/ (will contain downloaded binary)
+# README.md (documentation)
+# LICENSE (legal)
+# NOTICE (attribution)
+# DISCLAIMER.md (legal protection)
+# SECURITY.md (security policy)

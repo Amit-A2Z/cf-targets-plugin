@@ -33,8 +33,8 @@ import (
 	"code.cloudfoundry.org/cli/cf/configuration/confighelpers"
 	"code.cloudfoundry.org/cli/cf/configuration/coreconfig"
 	"code.cloudfoundry.org/cli/plugin"
-	"github.com/norman-abramovitz/cf-targets-plugin/diff"
-	"github.com/norman-abramovitz/cf-targets-plugin/diff/myers"
+	"github.com/Amit-A2Z/cf-targets-plugin/diff"
+	"github.com/Amit-A2Z/cf-targets-plugin/diff/myers"
 )
 
 // There are three files that target plugin keeps track of

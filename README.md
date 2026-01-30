@@ -1,6 +1,6 @@
 # CF Targets Plugin
 
-[![Build Status](https://travis-ci.org/norman-abramovitz/cf-targets-plugin.svg?branch=master)](https://travis-ci.org/norman-abramovitz/cf-targets-plugin)
+[![Build Status](https://travis-ci.org/Amit-A2Z/cf-targets-plugin.svg?branch=master)](https://travis-ci.org/Amit-A2Z/cf-targets-plugin)
 
 ## ⚠️ IMPORTANT LEGAL DISCLAIMERS
 
@@ -130,7 +130,20 @@ Your current target has not been saved. Use save-target first, or use -f to disc
 ### ⚠️ SECURITY WARNING
 **ALWAYS verify checksums before installation and scan binaries with your security tools.**
 
-### Option 1: Download Pre-built Binaries (Use at Your Own Risk)
+### Option 1: NPM Installation (Easiest)
+
+```bash
+# Install globally via npm
+npm install -g @cf-plugins/cf-targets-plugin
+
+# Install the plugin to CF CLI
+cf install-plugin cf-targets-plugin -f
+
+# Verify installation
+cf plugins
+```
+
+### Option 2: Download Pre-built Binaries (Manual)
 
 1. Download the appropriate binary for your platform from the [Releases](../../releases) page
 2. **VERIFY the SHA1 checksum** against the provided `.sha1` file
@@ -138,11 +151,11 @@ Your current target has not been saved. Use save-target first, or use -f to disc
 4. Make the binary executable (Linux/macOS): `chmod +x cf-targets-plugin-*`
 5. Install: `cf install-plugin /path/to/cf-targets-plugin-* -f`
 
-### Option 2: Build from Source (Recommended for Security)
+### Option 3: Build from Source (Most Secure)
 
 ```bash
 # Clone the repository
-git clone https://github.com/norman-abramovitz/cf-targets-plugin.git
+git clone https://github.com/Amit-A2Z/cf-targets-plugin.git
 cd cf-targets-plugin
 
 # Build for your platform
@@ -150,12 +163,6 @@ make build
 
 # Install the plugin
 cf install-plugin cf-targets-plugin -f
-```
-
-### Option 3: Install from CF Community (If Available)
-```bash
-cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org/
-cf install-plugin Targets -r CF-Community
 ```
 
 ## Full Command List
