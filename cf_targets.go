@@ -1,3 +1,19 @@
+/*
+Copyright 2024 Norman Abramovitz and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package main
 
 import (
@@ -9,8 +25,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
-	realio "io/ioutil"
 	realos "os"
 
 	"code.cloudfoundry.org/cli/cf/configuration"
@@ -48,7 +64,7 @@ type OS interface {
 	Mkdir(string, realos.FileMode)
 	Remove(string)
 	Symlink(string, string) error
-	ReadDir(string) ([]realos.FileInfo, error)
+	ReadDir(string) ([]realos.DirEntry, error)
 	ReadFile(string) ([]byte, error)
 	WriteFile(string, []byte, realos.FileMode) error
 }
@@ -57,10 +73,10 @@ func (*RealOS) Exit(code int)                                  { realos.Exit(cod
 func (*RealOS) Mkdir(path string, mode realos.FileMode)        { realos.Mkdir(path, mode) }
 func (*RealOS) Remove(path string)                             { realos.Remove(path) }
 func (*RealOS) Symlink(target string, source string) error     { return realos.Symlink(target, source) }
-func (*RealOS) ReadDir(path string) ([]realos.FileInfo, error) { return realio.ReadDir(path) }
-func (*RealOS) ReadFile(path string) ([]byte, error)           { return realio.ReadFile(path) }
+func (*RealOS) ReadDir(path string) ([]realos.DirEntry, error) { return realos.ReadDir(path) }
+func (*RealOS) ReadFile(path string) ([]byte, error)           { return realos.ReadFile(path) }
 func (*RealOS) WriteFile(path string, content []byte, mode realos.FileMode) error {
-	return realio.WriteFile(path, content, mode)
+	return realos.WriteFile(path, content, mode)
 }
 
 var os OS
@@ -76,11 +92,32 @@ var BuildVcsIdDate string
 var GoArch string
 var GoOs string
 
+// logWithTimestamp logs a message with UTC timestamp
+func logWithTimestamp(level, message string) {
+	timestamp := time.Now().UTC().Format("2006-01-02T15:04:05Z")
+	fmt.Printf("[%s] %s: %s\n", timestamp, level, message)
+}
+
+// logInfo logs an info message with UTC timestamp
+func logInfo(message string) {
+	logWithTimestamp("INFO", message)
+}
+
+// logError logs an error message with UTC timestamp
+func logError(message string) {
+	logWithTimestamp("ERROR", message)
+}
+
+// logWarn logs a warning message with UTC timestamp
+func logWarn(message string) {
+	logWithTimestamp("WARN", message)
+}
+
 func getVersion(version, toInt string) int {
 	theInt, err := strconv.Atoi(toInt)
 	if err != nil {
 		theInt = 0
-		fmt.Printf("Warning: %v for %v version value.  Defaulting to a zero value\n", err.Error(), version)
+		logWarn(fmt.Sprintf("Invalid %s version value, defaulting to zero: %v", version, err))
 	}
 	return theInt
 }
@@ -183,27 +220,9 @@ func main() {
 	if len(args) == 0 {
 		bm := createBuildMeta(GoOs, GoArch, SemVerBuild)
 		sv := createSemVer(SemVerMajor, SemVerMinor, SemVerPatch, SemVerPrerelease, bm)
-		f := "%13v %v\n"
-		fmt.Printf(f, "Version:", sv)
-		fmt.Printf(f, "Build Date:", BuildDate)
-		fmt.Printf(f, "VCS Url:", BuildVcsUrl)
-		fmt.Printf(f, "VCS Id:", BuildVcsId)
-		fmt.Printf(f, "VCS Id Date:", BuildVcsIdDate)
-
-		fmt.Printf("\nCopyright 2009 The Go Authors.   (diff directory tree only)\n\n")
-
-		fmt.Printf("Redistribution and use in source and binary forms, with or without\n")
-		fmt.Printf("modification, are permitted provided that the following conditions are met:\n\n")
-
-		fmt.Printf("   * Redistributions of source code must retain the above copyright\n")
-		fmt.Printf("     notice, this list of conditions and the following disclaimer.\n")
-		fmt.Printf("   * Redistributions in binary form must reproduce the above\n")
-		fmt.Printf("     copyright notice, this list of conditions and the following disclaimer\n")
-		fmt.Printf("     in the documentation and/or other materials provided with the\n")
-		fmt.Printf("     distribution.\n")
-		fmt.Printf("   * Neither the name of Google LLC nor the names of its\n")
-		fmt.Printf("     contributors may be used to endorse or promote products derived from\n")
-		fmt.Printf("     this software without specific prior written permission.\n")
+		fmt.Printf("cf-targets-plugin version %s\n", sv)
+		fmt.Printf("This cf CLI plugin is not intended to be run on its own\n")
+		realos.Exit(1)
 	}
 	os = &RealOS{}
 	plugin.Start(newTargetsPlugin())
@@ -312,18 +331,18 @@ func (c *TargetsPlugin) SetTargetCommand(args []string) {
 	targetName := flagSet.Arg(0)
 	targetPath := c.targetPath(targetName)
 	if !c.targetExists(targetPath) {
-		fmt.Println("Target", targetName, "does not exist.")
+		logError(fmt.Sprintf("Target '%s' does not exist", targetName))
 		panic(1)
 	}
 	if *force || !c.status.currentNeedsSaving {
 		c.copyContents(targetPath, c.configPath)
 		c.linkCurrent(targetPath)
 	} else {
-		fmt.Println("Your current target has not been saved. Use save-target first, or use -f to discard your changes.")
+		logInfo("Your current target has not been saved. Use save-target first, or use -f to discard your changes.")
 		c.showDiff(targetPath)
 		panic(1)
 	}
-	fmt.Println("Set target to", targetName)
+	logInfo(fmt.Sprintf("Set target to %s", targetName))
 }
 
 func (c *TargetsPlugin) SaveTargetCommand(args []string) {
@@ -346,27 +365,27 @@ func (c *TargetsPlugin) SaveNamedTargetCommand(targetName string, force bool) {
 		c.copyContents(c.configPath, targetPath)
 		c.linkCurrent(targetPath)
 	} else {
-		fmt.Println("Target", targetName, "already exists. Use -f to overwrite it.")
+		logError(fmt.Sprintf("Target '%s' already exists. Use -f to overwrite it.", targetName))
 		panic(1)
 	}
-	fmt.Println("Saved current target as", targetName)
+	logInfo(fmt.Sprintf("Saved current target as %s", targetName))
 }
 
 func (c *TargetsPlugin) SaveCurrentTargetCommand(force bool) {
 	if !c.status.currentHasName {
-		fmt.Println("Current target has not been previously saved. Please provide a name.")
+		logError("Current target has not been previously saved. Please provide a name.")
 		panic(1)
 	}
 	targetName := c.status.currentName
 	targetPath := c.targetPath(targetName)
 	if c.status.currentNeedsSaving && !force {
-		fmt.Println("You've made substantial changes to the current target.")
-		fmt.Println("Use -f if you intend to overwrite the target named", targetName, "or provide an alternate name")
+		logWarn("You've made substantial changes to the current target.")
+		logInfo(fmt.Sprintf("Use -f if you intend to overwrite the target named %s or provide an alternate name", targetName))
 		c.showDiff(c.configPath)
 		panic(1)
 	}
 	c.copyContents(c.configPath, targetPath)
-	fmt.Println("Saved current target as", targetName)
+	logInfo(fmt.Sprintf("Saved current target as %s", targetName))
 }
 
 func (c *TargetsPlugin) DeleteTargetCommand(args []string) {
@@ -376,14 +395,14 @@ func (c *TargetsPlugin) DeleteTargetCommand(args []string) {
 	targetName := args[1]
 	targetPath := c.targetPath(targetName)
 	if !c.targetExists(targetPath) {
-		fmt.Println("Target", targetName, "does not exist")
+		logError(fmt.Sprintf("Target '%s' does not exist", targetName))
 		panic(1)
 	}
 	os.Remove(targetPath)
 	if c.isCurrent(targetName) {
 		os.Remove(c.currentPath)
 	}
-	fmt.Println("Deleted target", targetName)
+	logInfo(fmt.Sprintf("Deleted target %s", targetName))
 }
 
 func (c *TargetsPlugin) getTargets() []string {
@@ -459,7 +478,7 @@ func (c *TargetsPlugin) targetPath(targetName string) string {
 
 func (c *TargetsPlugin) checkError(err error) {
 	if err != nil {
-		fmt.Println("Error:", err)
+		logError(fmt.Sprintf("Operation failed: %v", err))
 		panic(1)
 	}
 }

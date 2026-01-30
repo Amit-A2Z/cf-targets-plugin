@@ -1,6 +1,6 @@
 module github.com/norman-abramovitz/cf-targets-plugin
 
-go 1.24
+go 1.25
 
 replace github.com/norman-abramovitz/cf-targets-plugin/diff => ./diff
 

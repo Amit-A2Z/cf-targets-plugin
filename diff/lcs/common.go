@@ -5,7 +5,6 @@
 package lcs
 
 import (
-	"log"
 	"sort"
 )
 
@@ -72,9 +71,6 @@ func (l lcs) fix() lcs {
 		}
 	}
 	tmp.sort()
-	if false && !tmp.valid() { // debug checking
-		log.Fatalf("here %d", len(tmp))
-	}
 	return tmp
 }
 

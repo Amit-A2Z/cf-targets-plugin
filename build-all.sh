@@ -20,7 +20,7 @@ fi
 
 VERSION_CORE=(${VERSION_CORE//./ })
 
-declare LINUX64_SHA1 OSX_AMD64_SHA1 OSX_ARM64_SHA1 
+declare LINUX64_SHA1 LINUX_ARM64_SHA1 OSX_AMD64_SHA1 OSX_ARM64_SHA1 WIN64_SHA1 WIN_ARM64_SHA1 
 
 function build_semver() {
     TAG="${VERSION_CORE[0]}.${VERSION_CORE[1]}.${VERSION_CORE[2]}"
@@ -51,17 +51,22 @@ function build_for() {
 mkdir -p bin
 CHECKSUM="LINUX64_SHA1" GOOS=linux GOARCH=amd64 build_for
 
+CHECKSUM="LINUX_ARM64_SHA1" GOOS=linux GOARCH=arm64 build_for
+
 CHECKSUM="OSX_AMD64_SHA1" GOOS=darwin GOARCH=amd64 build_for
 
 CHECKSUM="OSX_ARM64_SHA1" GOOS=darwin GOARCH=arm64 build_for
 
 CHECKSUM="WIN64_SHA1" GOOS=windows GOARCH=amd64 build_for
 
+CHECKSUM="WIN_ARM64_SHA1" GOOS=windows GOARCH=arm64 build_for
+
 build_semver
 
 cat repo-index.yml |
 sed -e "s:osx-amd64-sha1:$OSX_AMD64_SHA1:" -e "s:osx-arm64-sha1:$OSX_ARM64_SHA1:" \
-    -e "s:win64-sha1:$WIN64_SHA1:" -e "s:linux64-sha1:$LINUX64_SHA1:" \
+    -e "s:win64-sha1:$WIN64_SHA1:" -e "s:win-arm64-sha1:$WIN_ARM64_SHA1:" \
+    -e "s:linux64-sha1:$LINUX64_SHA1:" -e "s:linux-arm64-sha1:$LINUX_ARM64_SHA1:" \
     -e "s:_TAG_:$TAG:" -e "s/_BUILD-TAG_/$BUILD/"
 
 #Link local build to give developer easy access to the plugin for installing

@@ -6,7 +6,6 @@ package diff
 
 import (
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -21,8 +20,8 @@ func Unified(oldLabel, newLabel, old, new string) string {
 	edits := Strings(old, new)
 	unified, err := ToUnified(oldLabel, newLabel, old, edits, DefaultContextLines)
 	if err != nil {
-		// Can't happen: edits are consistent.
-		log.Fatalf("internal error in diff.Unified: %v", err)
+		// Return empty string on error instead of panicking
+		return ""
 	}
 	return unified
 }

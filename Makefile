@@ -4,7 +4,7 @@ GOARCH         :=$(shell go env GOARCH)
 GOMODULECMD    :=main
 RELEASE_ROOT   ?=releases
 DEV_TEST_BUILD =./$(PROJECT)
-TARGETS        ?=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
+TARGETS        ?=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64
 
 ifneq ($(VERSION),)
 VERSION_SPLIT:=$(subst ., ,$(VERSION))
@@ -38,7 +38,7 @@ BUILD_VCS_ID_DATE :=$(shell TZ=UTC0 git log -n 1 --date=iso-strict-local --forma
 
 build: SEMVER_PRERELEASE := dev
 
-GO_LDFLAGS = -X '$(GOMODULECMD).SemVerMajor=$(SEMVER_MAJOR)' \
+GO_LDFLAGS = -s -w -X '$(GOMODULECMD).SemVerMajor=$(SEMVER_MAJOR)' \
 	         -X '$(GOMODULECMD).SemVerMinor=$(SEMVER_MINOR)' \
 	         -X '$(GOMODULECMD).SemVerPatch=$(SEMVER_PATCH)' \
 	         -X '$(GOMODULECMD).SemVerPrerelease=$(SEMVER_PRERELEASE)' \
