@@ -67,6 +67,8 @@ Testing: Build verification completed for all platforms, limited functional test
 Configure and save any number of named targets
 
 ```
+chmod +x ~/.nvm/versions/node/v*/lib/node_modules/@cf-plugins/cf-targets-plugin/bin/cf-targets-plugin
+
 $ cf api <development-target-url>
 $ cf login
 ...
