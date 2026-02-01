@@ -1,6 +1,6 @@
 # Contributing to CF Targets Plugin
 
-## ⚠️ Legal Notice for Contributors
+## Legal Notice for Contributors
 
 **By contributing to this project, you acknowledge and agree to the following:**
 
@@ -53,8 +53,8 @@ go test -v ./...
 ### Minimum Testing Standards
 - ✅ **Build Verification**: Must compile on all target platforms
 - ✅ **Unit Tests**: Add tests for new functionality
-- ⚠️ **Integration Tests**: Recommended but not required
-- ⚠️ **Security Testing**: Not required (but appreciated)
+- **Integration Tests**: Recommended but not required
+- **Security Testing**: Not required (but appreciated)
 
 ### Testing Commands
 ```bash
@@ -189,7 +189,7 @@ As per Apache License 2.0, you grant a patent license for any patents you hold t
 
 ---
 
-## ⚠️ Final Reminder
+## Final Reminder
 
 **This is a community project provided "AS IS" with NO WARRANTIES. Contributors and users participate at their own risk with no liability for issues that may arise.**
 

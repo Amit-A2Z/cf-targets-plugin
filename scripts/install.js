@@ -3,9 +3,7 @@
 /**
  * CF Targets Plugin - NPM Installation Script
  * 
- * ⚠️ USE AT YOUR OWN RISK - This software is provided "AS IS" without warranty
- * 
- * Copyright 2024 Norman Abramovitz and Contributors
+ * Copyright 2024 Amit-A2Z and Contributors
  * Licensed under Apache License 2.0
  */
 
@@ -53,15 +51,13 @@ function logError(message) {
   logWithTimestamp('ERROR', message);
 }
 
-function showSecurityWarning() {
-  console.log('\n' + '='.repeat(80));
-  console.log('⚠️  IMPORTANT SECURITY WARNING');
-  console.log('='.repeat(80));
-  console.log('This software is provided "AS IS" without warranty of any kind.');
-  console.log('NO comprehensive security testing has been performed.');
-  console.log('USE AT YOUR OWN RISK - You assume all responsibility.');
-  console.log('See DISCLAIMER.md for complete legal notice.');
-  console.log('='.repeat(80) + '\n');
+function showInstallationInfo() {
+  console.log('\n' + '='.repeat(60));
+  console.log('CF Targets Plugin Installation');
+  console.log('='.repeat(60));
+  console.log('Installing Cloud Foundry CLI plugin for target management');
+  console.log('This software is provided "AS IS" without warranty');
+  console.log('='.repeat(60) + '\n');
 }
 
 function getPlatformInfo() {
@@ -121,6 +117,48 @@ function downloadFile(url, destination) {
   });
 }
 
+function checkCFCLI() {
+  try {
+    const output = execSync('cf --version', { encoding: 'utf8', stdio: 'pipe' });
+    logInfo(`CF CLI detected: ${output.trim()}`);
+    return true;
+  } catch (error) {
+    logWarn('CF CLI not found in PATH');
+    return false;
+  }
+}
+
+function installCFPlugin(binaryPath) {
+  try {
+    logInfo('Registering plugin with CF CLI...');
+    const output = execSync(`cf install-plugin "${binaryPath}" -f`, { 
+      encoding: 'utf8', 
+      stdio: 'pipe' 
+    });
+    logInfo('Plugin registered successfully with CF CLI');
+    return true;
+  } catch (error) {
+    logError(`Failed to register plugin with CF CLI: ${error.message}`);
+    return false;
+  }
+}
+
+function verifyCFPlugin() {
+  try {
+    const output = execSync('cf plugins', { encoding: 'utf8', stdio: 'pipe' });
+    if (output.includes('cf-targets')) {
+      logInfo('✅ Plugin verification successful - cf-targets is now available');
+      return true;
+    } else {
+      logWarn('Plugin may not be properly registered');
+      return false;
+    }
+  } catch (error) {
+    logWarn('Could not verify plugin installation');
+    return false;
+  }
+}
+
 async function verifyChecksum(binaryPath, checksumPath) {
   try {
     const checksumContent = fs.readFileSync(checksumPath, 'utf8').trim();
@@ -143,9 +181,12 @@ async function verifyChecksum(binaryPath, checksumPath) {
 
 async function install() {
   try {
-    showSecurityWarning();
+    showInstallationInfo();
     
     logInfo('Starting CF Targets Plugin installation...');
+    
+    // Check if CF CLI is available
+    const cfCliAvailable = checkCFCLI();
     
     // Get platform information
     const platformInfo = getPlatformInfo();
@@ -185,15 +226,32 @@ async function install() {
     // Clean up checksum file
     fs.unlinkSync(checksumPath);
     
-    logInfo('✅ CF Targets Plugin installed successfully!');
-    logWarn('⚠️  REMEMBER: This software is provided "AS IS" without warranty');
-    logWarn('⚠️  SCAN the binary with your security tools before use');
-    logWarn('⚠️  TEST in non-production environments first');
+    logInfo('✅ Binary installation completed successfully!');
     
-    console.log('\nNext steps:');
-    console.log('1. Install the plugin: cf install-plugin cf-targets-plugin -f');
-    console.log('2. Verify installation: cf plugins');
-    console.log('3. Get help: cf targets --help');
+    // Register plugin with CF CLI if available
+    if (cfCliAvailable) {
+      const pluginInstalled = installCFPlugin(binaryPath);
+      if (pluginInstalled) {
+        verifyCFPlugin();
+        console.log('\n🎉 Installation Complete!');
+        console.log('The cf-targets plugin is now ready to use:');
+        console.log('• Run "cf plugins" to see installed plugins');
+        console.log('• Run "cf targets --help" to get started');
+        console.log('• Run "cf save-target <name>" to save your current target');
+      } else {
+        console.log('\n⚠️  Manual CF CLI Registration Required:');
+        console.log(`1. Run: cf install-plugin "${binaryPath}" -f`);
+        console.log('2. Verify: cf plugins');
+        console.log('3. Get help: cf targets --help');
+      }
+    } else {
+      console.log('\n⚠️  CF CLI Not Found:');
+      console.log('1. Install CF CLI first: https://docs.cloudfoundry.org/cf-cli/install-go-cli.html');
+      console.log(`2. Then run: cf install-plugin "${binaryPath}" -f`);
+      console.log('3. Verify: cf plugins');
+    }
+    
+    console.log('\nNote: This software is provided "AS IS" without warranty');
     
   } catch (error) {
     logError(`Installation failed: ${error.message}`);

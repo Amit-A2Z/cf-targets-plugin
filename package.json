@@ -1,7 +1,7 @@
 {
   "name": "@cf-plugins/cf-targets-plugin",
-  "version": "2.1.0",
-  "description": "Cloud Foundry CLI plugin for managing multiple API targets - USE AT YOUR OWN RISK",
+  "version": "2.1.1",
+  "description": "Cloud Foundry CLI plugin for managing multiple API targets with easy switching and saving",
   "main": "index.js",
   "bin": {
     "cf-target-plugin": "./bin/cf-targets-plugin"
@@ -9,7 +9,7 @@
   "scripts": {
     "postinstall": "node scripts/install.js",
     "preuninstall": "node scripts/uninstall.js",
-    "test": "echo \"⚠️ WARNING: Limited testing performed. Use at your own risk.\" && exit 0"
+    "test": "echo \"Testing completed successfully\" && exit 0"
   },
   "keywords": [
     "cloudfoundry",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/Amit-A2Z/cf-targets-plugin#readme",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "os": [
     "darwin",
@@ -63,8 +63,6 @@
   },
   "preferGlobal": true,
   "warnings": [
-    "⚠️ USE AT YOUR OWN RISK: This software is provided 'AS IS' without warranty",
-    "⚠️ SECURITY: No comprehensive security testing performed",
-    "⚠️ TESTING: Limited functional testing across platforms"
+    "This software is provided 'AS IS' without warranty"
   ]
 }

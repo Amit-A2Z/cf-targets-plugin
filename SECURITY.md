@@ -1,6 +1,6 @@
 # Security Policy
 
-## ⚠️ IMPORTANT SECURITY NOTICE
+## IMPORTANT SECURITY NOTICE
 
 **This software has NOT undergone comprehensive security testing or audit.**
 
@@ -13,7 +13,7 @@
 - ❌ **No comprehensive penetration testing**
 - ❌ **Limited functional testing across platforms**
 - ❌ **No automated security scanning in CI/CD**
-- ⚠️ **Basic build verification only**
+- **Basic build verification only**
 
 ### Known Security Considerations
 
@@ -27,7 +27,7 @@
 
 | Version | Security Support | Status |
 | ------- | --------------- | ------ |
-| 2.0.x   | ⚠️ Best Effort | Current |
+| 2.0.x   | Best Effort | Current |
 | < 2.0   | ❌ No Support  | Legacy |
 
 **Note**: "Best Effort" means community-driven security fixes with no guarantees or SLAs.
@@ -53,7 +53,7 @@ Instead:
 
 ### Response Expectations
 
-⚠️ **NO GUARANTEED RESPONSE TIME** - This is a community project with limited resources.
+**NO GUARANTEED RESPONSE TIME** - This is a community project with limited resources.
 
 - **Acknowledgment**: Best effort within 30 days
 - **Investigation**: Best effort, no timeline guaranteed
@@ -108,7 +108,7 @@ This plugin has access to:
 - ✅ **Open Source**: Source code available for review
 - ✅ **Checksums**: SHA1 checksums provided for binaries
 - ✅ **Pure Go**: No C dependencies (CGO_ENABLED=0)
-- ⚠️ **Limited Testing**: Basic functionality testing only
+- **Limited Testing**: Basic functionality testing only
 - ❌ **No Formal Audit**: No professional security review
 
 ## Disclaimer
@@ -138,4 +138,4 @@ Users are solely responsible for:
 
 ---
 
-**⚠️ REMEMBER: USE AT YOUR OWN RISK - NO SECURITY GUARANTEES PROVIDED**
+**REMEMBER: USE AT YOUR OWN RISK - NO SECURITY GUARANTEES PROVIDED**
