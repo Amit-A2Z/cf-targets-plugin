@@ -5,3 +5,8 @@
 /cf-targets-plugin
 /releases/**
 .DS_Store
+.kiro/
+.vscode/
+.cursor/
+.antigravity/
+.claude/
